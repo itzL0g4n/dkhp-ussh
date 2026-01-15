@@ -12,8 +12,8 @@ Tool hỗ trợ đăng ký học phần tự động (Sniper) cho sinh viên HCM
 ### Bước 1: Lấy dữ liệu cấu hình (Config ID & Mã lớp)
 1. Đăng nhập vào trang đăng ký học phần.
 2. Nhấn **F12** > Tab **Console** > Copy nội dung file `dan_vao_console.js` dán vào và Enter.
-3. Thao tác trên web (chọn đợt đăng kí và bấm "Tiếp theo").
-4. **Copy lại** `CONFIG_ID` và `Mã lớp học phần` hiện ra trong Console.
+3. Tìm đến đợt đăng kí cần snipe
+4. **Copy lại** `CONFIG_ID` hiện ra trong Console. Đây chính là mã định danh của đợt đăng kí.
 
 ### Bước 2: Lấy Cookie (Dùng Extension)
 1. Cài đặt extension **Cookie-Editor** (Chrome/Edge/Firefox).
@@ -33,8 +33,7 @@ Tool hỗ trợ đăng ký học phần tự động (Sniper) cho sinh viên HCM
 * `TARGETS`: Điền thông lớp học phần muốn săn.
 
 
-3. Chạy tool:
+3. Chạy tool (Nên chạy gần sát giờ G để tránh gửi request quá nhiều đến server trường và bị rate limit:
 ```
 python sniper_ussh.py
-
 ```
