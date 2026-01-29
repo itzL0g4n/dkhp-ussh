@@ -27,8 +27,9 @@ Mở `sniper_ussh.py` bằng trình soạn thảo văn bản. Tại phần `TARG
 
 ### Bước 4: Khởi chạy
 1. Cài đặt thư viện:
-   ```
-   pip install requests colorama
+```
+pip install requests colorama
+```
 2. Chạy tool:
 ```
 python sniper_ussh.py
@@ -46,6 +47,7 @@ python sniper_ussh.py
 ### Một vài lưu ý khi Commit:
 * **Commit Message:** `docs: update readme with auto-detect class feature`
 * Bạn có thể thêm hình ảnh minh họa (như tấm hình bạn vừa gửi) vào thư mục dự án và chèn vào README bằng cú pháp `![Lobby](image_4ed330.png)` để người xem dễ hình dung chỗ cần lấy ID.
+
 
 
 
