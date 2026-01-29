@@ -1,121 +1,53 @@
-# USSH Sniper - Chrome Extension
+# HCMUSSH Course Sniper Tool 🎯
 
-A Chrome extension port of the USSH Sniper V3 tool for automated course registration at HCMUS.
+Công cụ hỗ trợ đăng ký học phần tự động dành cho sinh viên HCMUSSH. 
+> **Cảnh báo:** Chỉ sử dụng cho mục đích nghiên cứu kỹ thuật. Tác giả không chịu trách nhiệm cho bất kỳ khiếu nại nào từ phía nhà trường. Hãy sử dụng một cách thông minh!
 
-## Features
+## 📂 Cấu trúc dự án
+1. `sniper_ussh.py`: Script Python thực hiện bắn request đăng ký.
+2. `dan_vao_console.js`: Script JavaScript giúp "soi" Config ID và cấu trúc Payload ngay trên trình duyệt.
 
-✅ **Auto-detection of available slots** - Continuously scans for course availability
-✅ **One-click registration** - Automatically registers when slots open
-✅ **Multiple target classes** - Hunt for multiple courses simultaneously
-✅ **Persistent configuration** - Saves settings across sessions
-✅ **Real-time logging** - See exactly what's happening
-✅ **Configurable scan delay** - Control hunting speed
+## 🚀 Hướng dẫn sử dụng
 
-## Installation
+### Bước 1: Lấy ID đợt đăng ký (Config ID)
+1. Truy cập trang chọn đợt đăng ký của trường.
+2. Nhấn **F12** > Tab **Console** > Dán nội dung file `dan_vao_console.js` và nhấn Enter.
+3. Script sẽ tự động quét và in ra danh sách các đợt (kể cả đợt chưa mở). Hãy copy số `CONFIG_ID` của đợt bạn muốn săn.
 
-1. **Extract the extension:**
-   - Navigate to the `chrome-extension` folder
+### Bước 2: Lấy Cookie (Header String)
+1. Sử dụng extension **Cookie-Editor**.
+2. Tại trang đăng ký, chọn **Export** > **Header String**. 
+3. Lưu chuỗi này lại để dán vào file Python.
 
-2. **Load into Chrome:**
-   - Open Chrome and go to `chrome://extensions/`
-   - Enable **Developer Mode** (top-right corner)
-   - Click **Load unpacked**
-   - Select the `chrome-extension` folder
-   - The extension will appear in your Chrome toolbar
+### Bước 3: Cấu hình mục tiêu (Targets)
+Mở `sniper_ussh.py` bằng trình soạn thảo văn bản. Tại phần `TARGETS`, bạn có 2 lựa chọn:
 
-3. **Pin the extension (optional):**
-   - Click the puzzle icon in Chrome toolbar
-   - Find "USSH Sniper - Course Registration Tool"
-   - Click the pin icon to keep it visible
+* **Chế độ săn đích danh:** Điền đầy đủ `ma_lop_hp` (Ví dụ: `2520VNH070L01`). Tool sẽ chỉ tập trung săn đúng lớp này.
+* **Chế độ săn tự động (Dành cho môn Thể dục/Môn chung):** Để trống mã lớp (`"ma_lop_hp": ""`) và chỉ điền `ma_mon`. Tool sẽ tự quét toàn bộ danh sách lớp của môn đó, hễ lớp nào còn chỗ trống là "chốt đơn" ngay lập tức.
 
-## Usage
+### Bước 4: Khởi chạy
+1. Cài đặt thư viện:
+   ```
+   pip install requests colorama
 
-### Step 1: Get Your Cookie
-1. Go to https://hcmussh.edu.vn/
-2. Open Developer Tools (F12)
-3. Go to **Application** → **Cookies** → Select the HCMUSSH domain
-4. Find and copy the cookie value (usually starts with `dhkhxhnv-dhbk...`)
 
-### Step 2: Configure the Extension
-1. Click the extension icon in your Chrome toolbar
-2. Paste your cookie into the **Cookie** field
-3. Fill in:
-   - **Config ID** (from your course registration page, usually 1686)
-   - **School Year** (e.g., "2025 - 2026")
-   - **Semester** (e.g., 2)
-   - **Scan Delay** (recommended: 1.0 seconds)
+2. Chạy tool:
+```
+python sniper_ussh.py
 
-### Step 3: Add Target Classes
-1. Click **+ Add Target Class**
-2. Fill in each target's details:
-   - **Display Name**: A nickname for the course (e.g., "Badminton 1")
-   - **Class Code**: The course code (e.g., "2520TC2004L02")
-   - **Subject Code**: The subject code (e.g., "TC2004")
-   - **Full Subject Name**: Complete course name
-3. Add as many targets as you want
+```
 
-### Step 4: Start Hunting
-1. Click **▶️ Start Hunting**
-2. Watch the log for slot updates
-3. The extension will automatically register when slots become available
-4. Click **⏹️ Stop** to pause hunting
 
-## Getting Class Information
+*(Khuyến khích chạy trước giờ G khoảng 30-60 giây để tối ưu tốc độ phản xạ).*
 
-To find the class code and other details:
+## 💡 Mẹo nhỏ
 
-1. Log into HCMUSSH course registration page
-2. Open **F12 Developer Tools**
-3. Go to **Network** tab
-4. Look for requests to `get-data` endpoint
-5. Check the **Request Payload** to find:
-   - `cauHinh[id]` → Config ID
-   - `cauHinh[namHoc]` → School Year
-   - `cauHinh[hocKy]` → Semester
+* Nếu chạy tool mà báo lỗi `401`, hãy lấy lại Cookie mới (thường Cookie hết hạn sau 30-60 phút).
+* Khi tool báo `✅ ĐÃ ĐĂNG KÝ THÀNH CÔNG`, hãy vào web kiểm tra lại và tắt tool ngay.
 
-For individual course codes, check the course listing page or examine network requests when viewing available courses.
 
-## Data Storage
+### Một vài lưu ý khi Commit:
+* **Commit Message:** `docs: update readme with auto-detect class feature`
+* Bạn có thể thêm hình ảnh minh họa (như tấm hình bạn vừa gửi) vào thư mục dự án và chèn vào README bằng cú pháp `![Lobby](image_4ed330.png)` để người xem dễ hình dung chỗ cần lấy ID.
 
-All your configurations (cookie, targets, settings) are stored securely in Chrome's sync storage. Your data will be:
-- Saved automatically when you click "💾 Save Config"
-- Synced across devices if you're signed into Chrome
-- Only sent to HCMUSSH servers (not to external parties)
-
-## Tips & Tricks
-
-💡 **Optimal scan speed**: Start with 1.0 seconds, adjust based on server response times
-💡 **Multiple extensions**: You can have multiple browser profiles with different cookies for different accounts
-💡 **Check before hunting**: Verify your class codes are correct before starting
-💡 **Keep browser open**: The extension requires an active Chrome window to function
-💡 **Monitor the log**: The log shows real-time updates about slot availability
-
-## Troubleshooting
-
-### "Server Check Slot lỗi"
-- Your cookie may have expired. Get a new one and try again.
-
-### "Không thấy lớp trong DS"
-- The class code might be incorrect
-- The course might already be registered
-- The registration period might have ended
-
-### Extension won't start
-- Make sure you've filled in all required fields
-- Check that your cookie is valid (not expired)
-- Check browser console (F12) for errors
-
-## Safety Notice
-
-⚠️ **Cookie Security**: Never share your cookie with others. It contains your login credentials.
-⚠️ **Terms of Service**: Use responsibly and in accordance with HCMUS regulations.
-⚠️ **Multiple Instances**: Don't run multiple copies of this tool simultaneously with the same account.
-
-## Credits
-
-Based on **USSH Sniper V3** - A course registration automation tool
-Ported to Chrome Extension format
-
----
-
-**Version 3.0.0** - Chrome Extension Edition
+Bạn đã sẵn sàng để "lên sóng" GitHub chưa? Chúc dự án của bạn nhận được nhiều ngôi sao (star) nhé! 🚀
