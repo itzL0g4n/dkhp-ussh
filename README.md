@@ -44,9 +44,6 @@ python sniper_ussh.py
 * Khi tool báo `✅ ĐÃ ĐĂNG KÝ THÀNH CÔNG`, hãy vào web kiểm tra lại và tắt tool ngay.
 
 
-### Một vài lưu ý khi Commit:
-* **Commit Message:** `docs: update readme with auto-detect class feature`
-* Bạn có thể thêm hình ảnh minh họa (như tấm hình bạn vừa gửi) vào thư mục dự án và chèn vào README bằng cú pháp `![Lobby](image_4ed330.png)` để người xem dễ hình dung chỗ cần lấy ID.
 
 
 
