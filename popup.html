@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USSH Sniper Tool</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 USSH Sniper V4</h1>
+            <p class="subtitle">Đăng Ký Lớp Học Tự Động (v4 với Tự Động Phát Hiện)</p>
+        </div>
+
+        <!-- Configuration Section -->
+        <div class="section">
+            <h2>⚙️ Cấu Hình</h2>
+            
+            <div class="config-group">
+                <label>
+                    <input type="checkbox" id="enableInterception"> 
+                    🔍 Kích hoạt Bắt Lệnh Mạng (Console Log)
+                </label>
+                <small style="display: block; color: #999; margin-top: 5px;">Ghi lại tất cả các yêu cầu API vào console của trình duyệt</small>
+            </div>
+
+            <div class="config-group">
+                <label for="cookie">Cookie:</label>
+                <textarea id="cookie" placeholder="Dán cookie của bạn ở đây (F12 -> Network -> Headers)"></textarea>
+            </div>
+
+            <div class="config-row">
+                <div class="config-group">
+                    <label for="configId">Config ID:</label>
+                    <input type="text" id="configId" value="1686" placeholder="1686">
+                </div>
+                <div class="config-group">
+                    <label for="schoolYear">Năm Học:</label>
+                    <input type="text" id="schoolYear" value="2025 - 2026" placeholder="2025 - 2026">
+                </div>
+                <div class="config-group">
+                    <label for="semester">Học Kỳ:</label>
+                    <input type="text" id="semester" value="2" placeholder="2">
+                </div>
+            </div>
+
+            <div class="config-group">
+                <label for="delay">Độ Trễ Quét (giây):</label>
+                <input type="number" id="delay" value="1.0" step="0.1" min="0.1">
+            </div>
+        </div>
+
+        <!-- Targets Section -->
+        <div class="section">
+            <h2>🎓 Các Lớp Cần Săn</h2>
+            <div id="targetsList"></div>
+            <button id="addTarget" class="btn-secondary" type="button">+ Thêm Lớp Cần Săn</button>
+        </div>
+
+        <!-- Status Section -->
+        <div class="section">
+            <h2>📊 Trạng Thái</h2>
+            <div id="status" class="status-box">Sẵn sàng bắt đầu</div>
+            <div id="log" class="log-box"></div>
+        </div>
+
+        <!-- Control Buttons -->
+        <div class="controls">
+            <button id="startBtn" class="btn-primary">▶️ Bắt Đầu Săn</button>
+            <button id="stopBtn" class="btn-danger" disabled>⏹️ Dừng</button>
+            <button id="clearLog" class="btn-secondary">🗑️ Xóa Log</button>
+            <button id="saveConfig" class="btn-secondary">💾 Lưu Cấu Hình</button>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
