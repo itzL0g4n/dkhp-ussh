@@ -13,12 +13,12 @@ init(autoreset=True)
 # ==============================================================================
 
 # 1. Cookie
-COOKIE = "nhập cookie của bạn vào đây"
+COOKIE = "dhkhxhnv-dhbk-dhqgtphcm=s%3AQENBbPWKbUlqLPzqY1uVkimE4usQgdBxGDRmNPce80EemEe4Z1OXeU.YDSk3zoj6BqChbZAnnJIKzBsRwJ9Gir4JgdJNmuU7b4"
 
 # 2. Thông tin đợt đăng ký 
-CONFIG_ID = "nhập id"          
-NAM_HOC = "nhập năm học"     
-HOC_KY = "nhập học kỳ"                
+CONFIG_ID = "1686"          
+NAM_HOC = "2025 - 2026"     
+HOC_KY = "2"                
 
 # 3. Môn cần săn (TARGETS)
 TARGETS = [
