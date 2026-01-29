@@ -30,11 +30,9 @@ Mở `sniper_ussh.py` bằng trình soạn thảo văn bản. Tại phần `TARG
    ```
    pip install requests colorama
 
-
 2. Chạy tool:
 ```
 python sniper_ussh.py
-
 ```
 
 
@@ -50,4 +48,4 @@ python sniper_ussh.py
 * **Commit Message:** `docs: update readme with auto-detect class feature`
 * Bạn có thể thêm hình ảnh minh họa (như tấm hình bạn vừa gửi) vào thư mục dự án và chèn vào README bằng cú pháp `![Lobby](image_4ed330.png)` để người xem dễ hình dung chỗ cần lấy ID.
 
-Bạn đã sẵn sàng để "lên sóng" GitHub chưa? Chúc dự án của bạn nhận được nhiều ngôi sao (star) nhé! 🚀
+
