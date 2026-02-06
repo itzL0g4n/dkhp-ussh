@@ -39,7 +39,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('btnAdd').addEventListener('click', showModal);
     document.getElementById('btnModalCancel').addEventListener('click', hideModal);
     document.getElementById('btnModalSave').addEventListener('click', () => addTargetFromModal(getCurrentTargets()));
+
+    // Load Cookies
+    loadCurrentCookies();
 });
+
+async function loadCurrentCookies() {
+    try {
+        const cookies = await chrome.cookies.getAll({ domain: "hcmussh.edu.vn" });
+        if (cookies && cookies.length > 0) {
+            const cookieStr = cookies.map(c => `${c.name}=${c.value}`).join('; ');
+            document.getElementById('cookieDisplay').value = cookieStr;
+        } else {
+            document.getElementById('cookieDisplay').value = "Không tìm thấy cookie (Bạn đã login chưa?)";
+        }
+    } catch (e) {
+        document.getElementById('cookieDisplay').value = "Cần quyền 'Cookies' để xem.";
+    }
+}
 
 // ================= RENDER LOGIC =================
 function getCurrentTargets() {
