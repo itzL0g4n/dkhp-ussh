@@ -1,0 +1,38 @@
+{
+    "manifest_version": 3,
+    "name": "USSH Course Sniper",
+    "version": "1.0",
+    "description": "Automated course registration and network tools for hcmussh.edu.vn",
+    "permissions": [
+        "storage",
+        "activeTab",
+        "scripting"
+    ],
+    "host_permissions": [
+        "https://hcmussh.edu.vn/*"
+    ],
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://hcmussh.edu.vn/*"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "run_at": "document_end"
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "injected_console.js"
+            ],
+            "matches": [
+                "https://hcmussh.edu.vn/*"
+            ]
+        }
+    ]
+}
