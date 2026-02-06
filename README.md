@@ -22,7 +22,7 @@ Tool hỗ trợ đăng ký học phần tự động cho sinh viên USSH (ĐHQG-
 
 Do tool này không có trên Chrome Web Store (hàng "nhà làm"), bạn cần cài thủ công:
 
-1.  Tải hoặc Clone thư mục source code về máy.
+1.  Tải và giải nén thư mục về máy tại [ĐÂY](https://github.com/itzL0g4n/dkhp-ussh/releases/download/v1.0.0/chrome_extension.zip).
 2.  Mở trình duyệt (Chrome, Edge, Brave...), truy cập địa chỉ: `chrome://extensions/`
 3.  Bật chế độ **Developer mode** (Chế độ dành cho nhà phát triển) ở góc trên bên phải.
 4.  Bấm nút **Load unpacked** (Tải tiện ích đã giải nén).
@@ -61,4 +61,5 @@ Do tool này không có trên Chrome Web Store (hàng "nhà làm"), bạn cần 
 -   Tool được viết cho mục đích học tập và nghiên cứu (Educational Purpose).
 -   Tác giả không chịu trách nhiệm về việc sử dụng tool vào mục đích xấu hoặc vi phạm quy định của nhà trường.
 -   Hãy sử dụng một cách văn minh và có chừng mực.
+
 
