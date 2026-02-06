@@ -5,11 +5,11 @@ Công cụ hỗ trợ đăng ký học phần tự động dành cho sinh viên 
 
 Phiên bản extension đang được phát triển, với phiên bản này bạn không cần phải tự lấy cookies. Truy cập ở [ĐÂY](https://github.com/itzL0g4n/dkhp-ussh/tree/beta-extension)
 
-## 📂 Cấu trúc dự án
+## Cấu trúc dự án
 1. `sniper_ussh.py`: Script Python thực hiện bắn request đăng ký.
 2. `dan_vao_console.js`: Script JavaScript giúp "soi" Config ID và cấu trúc Payload ngay trên trình duyệt.
 
-## 🚀 Hướng dẫn sử dụng
+## Hướng dẫn sử dụng
 
 ### Bước 1: Lấy ID đợt đăng ký (Config ID)
 1. Truy cập trang chọn đợt đăng ký của trường.
@@ -40,10 +40,11 @@ python sniper_ussh.py
 
 *(Khuyến khích chạy trước giờ G khoảng 30-60 giây để tối ưu tốc độ phản xạ).*
 
-## 💡 Mẹo nhỏ
+## Mẹo nhỏ
 
 * Nếu chạy tool mà báo lỗi `401`, hãy lấy lại Cookie mới (thường Cookie hết hạn sau 30-60 phút).
 * Khi tool báo `✅ ĐÃ ĐĂNG KÝ THÀNH CÔNG`, hãy vào web kiểm tra lại và tắt tool ngay.
+
 
 
 
