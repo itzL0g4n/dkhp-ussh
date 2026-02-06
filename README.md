@@ -3,6 +3,8 @@
 Công cụ hỗ trợ đăng ký học phần tự động dành cho sinh viên HCMUSSH. 
 > **Cảnh báo:** Chỉ sử dụng cho mục đích nghiên cứu kỹ thuật. Tác giả không chịu trách nhiệm cho bất kỳ khiếu nại nào từ phía nhà trường. Hãy sử dụng một cách thông minh!
 
+Phiên bản extension đang được phát triển, với phiên bản này bạn không cần phải tự lấy cookies. Truy cập ở [ĐÂY](https://github.com/itzL0g4n/dkhp-ussh/tree/beta-extension)
+
 ## 📂 Cấu trúc dự án
 1. `sniper_ussh.py`: Script Python thực hiện bắn request đăng ký.
 2. `dan_vao_console.js`: Script JavaScript giúp "soi" Config ID và cấu trúc Payload ngay trên trình duyệt.
@@ -42,6 +44,7 @@ python sniper_ussh.py
 
 * Nếu chạy tool mà báo lỗi `401`, hãy lấy lại Cookie mới (thường Cookie hết hạn sau 30-60 phút).
 * Khi tool báo `✅ ĐÃ ĐĂNG KÝ THÀNH CÔNG`, hãy vào web kiểm tra lại và tắt tool ngay.
+
 
 
 
