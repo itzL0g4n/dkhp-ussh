@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USSH Sniper V5 - Web Controller</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            <h1>USSH SNIPER <span class="version">V5 WEB</span></h1>
+            <div class="status-badge" :class="{ running: isRunning, stopped: !isRunning }">
+                {{ isRunning ? 'RUNNING' : 'STOPPED' }}
+            </div>
+        </header>
+
+        <main>
+            <!-- LEFT PANEL: CONFIG -->
+            <section class="panel config-panel">
+                <h2>🔫 Cấu hình</h2>
+                <div class="form-group">
+                    <label>Cookie</label>
+                    <input type="text" v-model="config.cookie" placeholder="Dán cookie vào đây...">
+                </div>
+                <div class="form-row grid-2-1">
+                    <div class="form-group">
+                        <label>Config ID</label>
+                        <input type="text" v-model="config.config_id">
+                    </div>
+                    <div class="form-group">
+                        <label>Delay (giây)</label>
+                        <input type="number" v-model.number="config.delay" step="0.1" min="0.1">
+                    </div>
+                </div>
+                <div class="form-row grid-2-1">
+                    <div class="form-group">
+                        <label>Năm Học</label>
+                        <input type="text" v-model="config.nam_hoc">
+                    </div>
+                    <div class="form-group">
+                        <label>Học Kỳ</label>
+                        <input type="text" v-model="config.hoc_ky">
+                    </div>
+                </div>
+
+                <h3>Mục tiêu (Targets)</h3>
+                <div class="targets-list">
+                    <div v-for="(target, index) in config.targets" :key="index" class="target-item">
+                        <div class="target-header">
+                            <input type="text" v-model="target.ten_goi_nho" placeholder="Tên gợi nhớ (VD: Bóng chuyền)">
+                            <button @click="removeTarget(index)" class="btn-icon">×</button>
+                        </div>
+                        <input type="text" v-model="target.ma_mon" placeholder="Mã Môn (VD: GDTC_BC) - BẮT BUỘC">
+                        <input type="text" v-model="target.ma_lop_hp" placeholder="Mã Lớp (Để trống nếu auto)">
+                        <input type="text" v-model="target.ten_mon_full" placeholder="Tên môn đầy đủ (để log)">
+                    </div>
+                    <button @click="addTarget" class="btn-add">+ Thêm mục tiêu</button>
+                </div>
+
+                <div class="actions">
+                    <button @click="saveConfig" class="btn btn-save">Lưu Cấu Hình</button>
+                    <button v-if="!isRunning" @click="startSniper" class="btn btn-start">BẮT ĐẦU SĂN</button>
+                    <button v-else @click="stopSniper" class="btn btn-stop">DỪNG LẠI</button>
+                </div>
+            </section>
+
+            <!-- RIGHT PANEL: LOGS & TOOLS -->
+            <section class="right-column">
+                <div class="panel log-panel">
+                    <h2>📟 Live Logs</h2>
+                    <div class="log-window" id="logWindow">
+                        <div v-for="log in logs" :class="['log-line', log.type]">
+                            <span class="timestamp">[{{ log.timestamp }}]</span>
+                            <span class="message">{{ log.message }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel console-tool">
+                    <h2>🛠️ Console Tool Helper</h2>
+                    <p>Copy đoạn mã dưới đây và dán vào Console (F12) của trang đăng ký để lấy Cookie và Config ID.</p>
+                    <textarea readonly id="consoleScript">{{ consoleScript }}</textarea>
+                    <button @click="copyScript" class="btn btn-copy">Copy Script</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+
+</html>
