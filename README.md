@@ -2,7 +2,7 @@
 
 Tool hỗ trợ đăng ký học phần tự động cho sinh viên USSH (ĐHQG-HCM), được chuyển đổi từ Python Script sang Chrome Extension tiện lợi.
 
-## 🚀 Tính Năng Chính
+## Tính Năng Chính
 
 1.  **Săn Môn Tự Động (Auto Sniper)**:
     -   Tự động quét và đăng ký ngay khi có slot.
@@ -18,7 +18,7 @@ Tool hỗ trợ đăng ký học phần tự động cho sinh viên USSH (ĐHQG-
     -   **UI Unlocker**: Mở khóa các nút bị ẩn/disabled trên trang web.
     -   **Cookie Display**: Xem nhanh Cookie hiện tại để debug nếu cần.
 
-## 🛠️ Cài Đặt
+## Cài Đặt
 
 Do tool này không có trên Chrome Web Store (hàng "nhà làm"), bạn cần cài thủ công:
 
@@ -28,7 +28,7 @@ Do tool này không có trên Chrome Web Store (hàng "nhà làm"), bạn cần 
 4.  Bấm nút **Load unpacked** (Tải tiện ích đã giải nén).
 5.  Chọn thư mục `chrome_extension` từ source code.
 
-## 📖 Hướng Dẫn Sử Dụng
+## Hướng Dẫn Sử Dụng
 
 ### 1. Chuẩn Bị
 -   Truy cập trang đăng ký học phần: `https://hcmussh.edu.vn/user/dang-ky-hoc-phan`
@@ -61,3 +61,4 @@ Do tool này không có trên Chrome Web Store (hàng "nhà làm"), bạn cần 
 -   Tool được viết cho mục đích học tập và nghiên cứu (Educational Purpose).
 -   Tác giả không chịu trách nhiệm về việc sử dụng tool vào mục đích xấu hoặc vi phạm quy định của nhà trường.
 -   Hãy sử dụng một cách văn minh và có chừng mực.
+
