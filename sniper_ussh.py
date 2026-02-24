@@ -9,55 +9,39 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 init(autoreset=True)
 
 # ==============================================================================
-# PHẦN 1: CẤU HÌNH
+# PHẦN 1: CẤU HÌNH 
 # ==============================================================================
 
-# 1. Cookie
-COOKIE = "dhkhxhnv-dhbk-dhqgtphcm=s%3AQENBbPWKbUlqLPzqY1uVkimE4usQgdBxGDRmNPce80EemEe4Z1OXeU.YDSk3zoj6BqChbZAnnJIKzBsRwJ9Gir4JgdJNmuU7b4"
+COOKIE = "nhập_cookie_của bạn"
+CONFIG_ID = "nhập_id"          
+NAM_HOC = "nhập_năm_học"     
+HOC_KY = "nhập_học_kì"                
 
-# 2. Thông tin đợt đăng ký 
-CONFIG_ID = "1686"          
-NAM_HOC = "2025 - 2026"     
-HOC_KY = "2"                
-
-# 3. Môn cần săn (TARGETS)
 TARGETS = [
-    # TRƯỜNG HỢP 1: BIẾT RÕ MÃ LỚP (Săn đích danh)
+    # Môn tự động tìm lớp trống (sẽ né lớp trùng lịch)
     {
-        "ten_goi_nho": "Văn học VN",
-        "ma_lop_hp": "2520VNH070L01",   # <--- Có mã lớp cụ thể
-        "ma_mon": "VNH070",
-        "ten_mon_full": "Tổng quan văn học Việt Nam"
-    },
-    
-    # TRƯỜNG HỢP 2: KHÔNG BIẾT MÃ LỚP (Săn tự động bất kỳ lớp nào của môn này)
-    {
-        "ten_goi_nho": "Bóng chuyền",
-        "ma_lop_hp": "",                # <--- ĐỂ TRỐNG: Tool sẽ tự tìm lớp cho bạn
-        "ma_mon": "GDTC_BC",            # <--- BẮT BUỘC PHẢI ĐÚNG MÃ MÔN
-        "ten_mon_full": "Giáo dục thể chất: Bóng chuyền" # Tên môn (để log cho đẹp)
+        "ten_goi_nho": "Tâm lý học đại cương",
+        "ma_lop_hp": "",                
+        "ma_mon": "DAI022",            
+        "ten_mon_full": "Tâm lý học đại cương" 
     }
 ]
 
-# 4. Cấu hình mạng
 URL_GET_DATA = "https://hcmussh.edu.vn/api/dkmh/hoc-phan/get-data"
 URL_REGISTER = "https://hcmussh.edu.vn/api/dkmh/dang-ky-hoc-phan"
 DELAY = 1.0 
 
 HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-    'Cookie': COOKIE,
-    'Origin': 'https://hcmussh.edu.vn',
-    'Referer': 'https://hcmussh.edu.vn/user/dang-ky-hoc-phan',
-    'X-Requested-With': 'XMLHttpRequest'
+    'Cookie': COOKIE
 }
 
 session = requests.Session()
 session.headers.update(HEADERS)
 
 # ==============================================================================
-# PHẦN 2: CÁC HÀM XỬ LÝ (ĐÃ NÂNG CẤP)
+# PHẦN 2: CÁC HÀM XỬ LÝ
 # ==============================================================================
 
 def log(msg, type="info"):
@@ -71,54 +55,90 @@ def log(msg, type="info"):
     else:
         print(f"{Fore.CYAN}[{timestamp}] ℹ️ {msg}")
 
-# --- Hàm cũ: Tìm chính xác mã lớp ---
-def find_specific_class_recursive(obj, class_id):
-    if isinstance(obj, dict):
-        if obj.get('maHocPhan') == class_id or obj.get('maLopHocPhan') == class_id:
-            return obj
-        for k, v in obj.items():
-            res = find_specific_class_recursive(v, class_id)
-            if res: return res
-    elif isinstance(obj, list):
-        for item in obj:
-            res = find_specific_class_recursive(item, class_id)
-            if res: return res
-    return None
-
-# --- Hàm MỚI: Tìm lớp bất kỳ theo Mã Môn mà còn slot ---
-def find_any_open_class_recursive(obj, subject_id):
+def is_conflict(target_class_id, json_data):
     """
-    Duyệt đệ quy tìm bất kỳ lớp nào có maMonHoc trùng khớp VÀ còn chỗ
+    Hàm: Kiểm tra trùng lịch
     """
-    if isinstance(obj, dict):
-        # Kiểm tra xem node này có phải là lớp học của môn cần tìm không
-        # Lưu ý: key 'maMonHoc' phải khớp với cấu trúc JSON của trường
-        if obj.get('maMonHoc') == subject_id:
-            si_so = int(obj.get('siSo', 9999))
-            max_slot = int(obj.get('soLuongDuKien', 0))
-            
-            # Nếu còn chỗ -> Trả về ngay lớp này
-            if si_so < max_slot:
-                return obj
-            # Nếu hết chỗ -> Vẫn trả về để log biết là có lớp nhưng đầy (Optional logic)
-            # Ở đây ta ưu tiên tìm lớp còn chỗ, nên nếu đầy thì bỏ qua tìm tiếp
+    registered_classes = json_data.get('hocPhanDangKy', [])
+    
+    if not registered_classes:
+        return False
         
-        for k, v in obj.items():
-            res = find_any_open_class_recursive(v, subject_id)
-            if res: return res
+    all_weeks = json_data.get('listDataTuanHoc', [])
+    if not all_weeks:
+        return False
 
-    elif isinstance(obj, list):
-        for item in obj:
-            res = find_any_open_class_recursive(item, subject_id)
-            if res: return res
-    return None
+    # 1. Lấy danh sách ID các lớp đã có
+    registered_ids = [c.get('maHocPhan') for c in registered_classes if c.get('maHocPhan')]
+    
+    if target_class_id in registered_ids:
+        return True # Đã đăng ký môn này rồi
+
+    # 2. Rút lịch học của lớp mới đang nhắm tới
+    target_weeks = [w for w in all_weeks if w.get('maHocPhan') == target_class_id and not w.get('isNgayLe')]
+    
+    # 3. Rút lịch học của các môn hiện tại đang có
+    registered_weeks = [w for w in all_weeks if w.get('maHocPhan') in registered_ids and not w.get('isNgayLe')]
+
+    # 4. Thuật toán so sánh từng tuần, từng tiết
+    for t_week in target_weeks:
+        t_start = t_week.get('ngayBatDau', 0)
+        t_end = t_week.get('ngayKetThuc', 0)
+
+        for r_week in registered_weeks:
+            r_start = r_week.get('ngayBatDau', 0)
+            r_end = r_week.get('ngayKetThuc', 0)
+
+            # Công thức va chạm thời gian
+            if t_start < r_end and t_end > r_start:
+                return True # BÁO ĐỎ: TRÙNG LỊCH!
+
+    return False # Lịch sạch
+
+def find_all_open_classes(obj, subject_id, specific_class_id=""):
+    results = []
+    
+    def _search(node):
+        if isinstance(node, dict):
+            match_condition = False
+            if specific_class_id:
+                match_condition = (node.get('maHocPhan') == specific_class_id or node.get('maLopHocPhan') == specific_class_id)
+            else:
+                match_condition = (node.get('maMonHoc') == subject_id)
+
+            if match_condition:
+                real_class_id = node.get('maLopHocPhan') or node.get('maHocPhan')
+                
+                if real_class_id:
+                    # BỘ LỌC: Nếu cục dữ liệu không có 'siSo' (là rác), ép nó thành 9999 để vứt đi
+                    si_so = int(node.get('siSo', 9999))
+                    max_slot = int(node.get('soLuongDuKien', 100)) 
+                    tinh_trang = int(node.get('tinhTrang', 2)) 
+                    
+                    if si_so < max_slot and tinh_trang != 3:
+                        results.append(node)
+                    
+            for v in node.values():
+                _search(v)
+        elif isinstance(node, list):
+            for item in node:
+                _search(item)
+                
+    _search(obj)
+    
+    # LỌC TRÙNG LẶP: Đảm bảo mỗi mã lớp chỉ xuất hiện 1 lần duy nhất
+    unique_results = {}
+    for cls in results:
+        cid = cls.get('maLopHocPhan') or cls.get('maHocPhan')
+        if cid not in unique_results:
+            unique_results[cid] = cls
+            
+    return list(unique_results.values())
 
 def fire_registration(target, found_class_id):
-    """
-    Bắn lệnh đăng ký với ID lớp vừa tìm được
-    """
+    """Hàm bắn đăng ký"""
     payload_reg = {
-        'hocPhan': found_class_id, # Sử dụng ID lớp tìm được tự động
+        'hocPhan': found_class_id,
         'filter[cauHinh][id]': CONFIG_ID,
         'filter[cauHinh][namHoc]': NAM_HOC,
         'filter[cauHinh][hocKy]': HOC_KY,
@@ -136,106 +156,87 @@ def fire_registration(target, found_class_id):
 
     try:
         res = session.post(url_reg, data=payload_reg, timeout=5)
-        
         if res.status_code == 200:
             if "maLoaiDky" in res.text:
-                log(f"✅ ĐÃ ĐĂNG KÝ THÀNH CÔNG: {found_class_id}", "success")
+                log(f"ĐÃ ĐĂNG KÝ THÀNH CÔNG: {found_class_id}", "success")
                 return True
             elif "message" in res.text: 
                 try:
                     msg = res.json().get('message', res.text)
                     log(f"Server báo: {msg}", "warn")
-                except:
-                    log(f"Phản hồi lạ: {res.text}", "warn")
-            else:
-                log(f"Phản hồi lạ: {res.text}", "warn")
+                except: pass
         else:
             log(f"Đăng ký thất bại (HTTP {res.status_code})", "error")
-            
     except Exception as e:
         log(f"Lỗi kết nối khi bắn: {e}", "error")
-    
     return False
 
 def check_slot_and_hunt():
     global TARGETS
-    
     if not TARGETS:
-        print(f"\n{Fore.GREEN}{Style.BRIGHT}=== CHÚC MỪNG! ĐÃ SĂN HẾT CÁC MÔN! ===")
+        print(f"\n{Fore.GREEN}{Style.BRIGHT}=== ĐÃ SĂN HẾT CÁC MÔN! ===")
         exit()
 
     try:
-        # Payload lấy dữ liệu
+        #Bật "1" cho tất cả các loại Kế Hoạch để quét hết môn
         data_lobby = {
-            'cauHinh[theoKeHoach]': '1',
-            'cauHinh[ngoaiKeHoach]': '0',
-            'cauHinh[ngoaiCtdt]': '0',
-            'cauHinh[chuyenLop]': '1',
-            'cauHinh[ghepLop]': '0',
-            'cauHinh[ngoaiNgu]': '1',
-            'cauHinh[heGhep]': '',
-            'cauHinh[isChanHocVuot]': '0',
-            'cauHinh[namHoc]': NAM_HOC,
-            'cauHinh[hocKy]': HOC_KY,
-            'cauHinh[id]': CONFIG_ID
+            'cauHinh[theoKeHoach]': '1', 
+            'cauHinh[ngoaiKeHoach]': '1', 
+            'cauHinh[ngoaiCtdt]': '1',
+            'cauHinh[chuyenLop]': '1', 'cauHinh[ghepLop]': '0', 'cauHinh[ngoaiNgu]': '1',
+            'cauHinh[heGhep]': '', 'cauHinh[isChanHocVuot]': '0',
+            'cauHinh[namHoc]': NAM_HOC, 'cauHinh[hocKy]': HOC_KY, 'cauHinh[id]': CONFIG_ID
         }
         
         ts = int(time.time() * 1000)
         url_check = f"{URL_GET_DATA}?t={ts}"
+        
+        log(f"Đang quét {len(TARGETS)} môn...", "info")
         response = session.post(url_check, data=data_lobby, timeout=10)
 
-        if response.status_code != 200:
-            log(f"Lỗi lấy dữ liệu: {response.status_code}", "error")
+        if response.status_code != 200: 
+            log(f"Lỗi Server (HTTP {response.status_code}). Cookie có thể đã hết hạn!", "error")
             return
 
         try:
             json_data = response.json()
             
-            # Duyệt ngược danh sách target
             for i in range(len(TARGETS) - 1, -1, -1):
                 target = TARGETS[i]
-                
-                found_class_obj = None
-                
-                # --- LOGIC QUAN TRỌNG: XÁC ĐỊNH CÁCH TÌM ---
-                if target['ma_lop_hp'] and len(target['ma_lop_hp']) > 5:
-                    # CÁCH 1: Nếu user điền mã lớp -> Tìm đích danh
-                    found_class_obj = find_specific_class_recursive(json_data, target['ma_lop_hp'])
-                else:
-                    # CÁCH 2: Nếu mã lớp trống -> Tìm tự động theo Mã Môn
-                    # log(f"Đang tự động tìm lớp cho môn {target['ma_mon']}...", "info")
-                    found_class_obj = find_any_open_class_recursive(json_data, target['ma_mon'])
+                open_classes = find_all_open_classes(json_data, target['ma_mon'], target['ma_lop_hp'])
 
-                # --- XỬ LÝ KẾT QUẢ TÌM KIẾM ---
-                if found_class_obj:
-                    # Lấy thông tin từ lớp tìm được
-                    real_class_id = found_class_obj.get('maLopHocPhan') or found_class_obj.get('maHocPhan')
-                    si_so = int(found_class_obj.get('siSo', 9999))
-                    max_slot = int(found_class_obj.get('soLuongDuKien', 0))
-                    
-                    log(f"Môn {target['ten_goi_nho']} (Lớp {real_class_id}): {si_so}/{max_slot}", "warn")
-                    
-                    if si_so < max_slot:
-                        log(f"🔥 CÓ SLOT TẠI {real_class_id}! BẮN NGAY...", "success")
-                        
-                        # Truyền ID lớp thực tế vừa tìm được vào hàm đăng ký
+                if open_classes:
+                    shot_fired = False
+                    for cls in open_classes:
+                        real_class_id = cls.get('maLopHocPhan') or cls.get('maHocPhan')
+                        si_so = int(cls.get('siSo', 0))
+                        max_slot = int(cls.get('soLuongDuKien', 100))
+
+                        if is_conflict(real_class_id, json_data):
+                            log(f"⚠️ {real_class_id} ({si_so}/{max_slot}): Bị TRÙNG LỊCH! Đang tìm lớp khác...", "warn")
+                            continue 
+
+                        log(f"🔥 CÓ SLOT TẠI {real_class_id} (LỊCH SẠCH)! BẮN...", "success")
                         if fire_registration(target, real_class_id):
                             print(f"{Fore.MAGENTA}>>> Xóa {target['ten_goi_nho']} khỏi danh sách săn <<<")
                             TARGETS.pop(i)
-                    else:
-                        pass # Đầy thì chờ vòng sau
+                            shot_fired = True
+                            break 
+                    
+                    if not shot_fired:
+                        log(f"Môn {target['ten_goi_nho']}: Các lớp còn trống đều bị trùng lịch.", "error")
                 else:
-                    # Không tìm thấy lớp nào (hoặc lớp đầy hết ở chế độ tự động)
-                    pass
+                    print(f"{Fore.WHITE}   - {target['ten_goi_nho']}: Không tìm thấy lớp, các lớp đã đầy, hoặc bị khóa.")
 
-        except Exception as e:
-            pass 
-
-    except Exception as e:
+        except Exception as e: 
+            log(f"Lỗi đọc dữ liệu JSON: {e}", "error") 
+    except Exception as e: 
         log(f"Lỗi mạng: {e}", "error")
 
+
+
 if __name__ == "__main__":
-    print(f"{Fore.GREEN}--- USSH SNIPER V4 (AUTO DETECT CLASS) ---")
+    print(f"{Fore.GREEN}--- USSH SNIPER BY itzL0g4n ---")
     print(f"Target: {len(TARGETS)} môn")
     try:
         while True:
