@@ -40,10 +40,12 @@ python sniper_ussh.py
 
 *(Khuyến khích chạy trước giờ G khoảng 30-60 giây để tối ưu tốc độ phản xạ).*
 
-## Mẹo nhỏ
+## Lưu ý
 
-* Nếu chạy tool mà báo lỗi `401`, hãy lấy lại Cookie mới (thường Cookie hết hạn sau 30-60 phút).
-* Khi tool báo `✅ ĐÃ ĐĂNG KÝ THÀNH CÔNG`, hãy vào web kiểm tra lại và tắt tool ngay.
+* Nếu chạy tool mà báo lỗi `401`, hãy lấy lại Cookie mới.
+* Khi tool báo `✅ ĐÃ ĐĂNG KÝ THÀNH CÔNG`, hãy vào web kiểm tra lại.
+* Tool phụ thuộc rất lớn vào tốc độ mạng của bạn.
+
 
 
 
